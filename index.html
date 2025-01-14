@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -14,39 +13,32 @@
         html {
             scroll-behavior: smooth;
         }
-
         body {
             font-family: 'Merriweather', serif;
             text-align: center;
             margin: 20px;
         }
-
         .translate {
             display: inline-block;
             cursor: pointer;
-            transition: color 0.3s ease;
+            transition: color 1s ease, text-shadow 1s ease-in-out, opacity 0.3s ease;
         }
-
         .column {
             max-width: 600px;
             margin: 0 auto;
             padding: 10px;
         }
-
         img {
             max-width: 100%;
             height: auto;
         }
-
         p, h1, h2 {
             word-wrap: break-word;
         }
-
         a {
             display: inline-block;
             margin: 5px 0;
         }
-
         .contact-button {
             display: inline-block;
             margin-top: 20px;
@@ -57,21 +49,28 @@
             border-radius: 5px;
             font-size: 16px;
         }
-
         .contact-button:hover {
             background-color: #0056b3;
         }
+
+        @media screen and (max-width: 768px) {
+            body {
+                margin: 10px;
+            }
+            .column {
+                padding: 5px;
+            }
+        }
     </style>
 </head>
-
 <body>
     <div class="column">
         <img src="images/resized_bear_600x220.png" alt="Reality." loading="lazy" />
         <h1>
-            <span class="translate" data-cn="你好，我是马特">Hi, I'm Matt.</span>
+            <span class="translate" data-cn="你好，我是马特">Hi, I'm Matt</span>
         </h1>
         <p>
-            <span class="translate" data-cn="軟體工程師、機器學習、網路安全">Software Engineer, Machine Learning, Cybersec.</span>
+            <span class="translate" data-cn="我喜欢人工智能和网络安全">I like artificial intelligence and cybersecurity.</span>
         </p>
         <h2>
             <span class="translate" data-cn="开源">Open Source:</span>
@@ -89,32 +88,138 @@
         </p>
     </div>
     <script defer>
-        // Translation Toggle Script
-        document.querySelectorAll('.translate').forEach(element => {
-            const originalText = element.innerText;
-            const chineseText = element.getAttribute('data-cn');
-
+        document.addEventListener('DOMContentLoaded', () => {
+            let touchStartX = 0;
+            let touchStartY = 0;
             let isTranslated = false;
-
-            const toggleTranslation = () => {
-                element.innerText = isTranslated ? originalText : chineseText;
-                isTranslated = !isTranslated;
-            };
-
-            // Handle hover for desktop and tap for mobile
-            element.addEventListener('click', toggleTranslation);
-            element.addEventListener('mouseenter', () => {
-                if (!isTranslated) element.innerText = chineseText;
+            
+            // Store all translatable elements
+            const translatableElements = document.querySelectorAll('.translate');
+            
+            // Initialize hover/click behavior for desktop
+            translatableElements.forEach(element => {
+                const originalText = element.innerText;
+                const chineseText = element.getAttribute('data-cn');
+                
+                // Handle hover for desktop
+                if (window.matchMedia('(hover: hover)').matches) {
+                    element.addEventListener('mouseenter', () => {
+                        if (!isTranslated) element.innerText = chineseText;
+                    });
+                    
+                    element.addEventListener('mouseleave', () => {
+                        if (!isTranslated) element.innerText = originalText;
+                    });
+                }
             });
-            element.addEventListener('mouseleave', () => {
-                if (!isTranslated) element.innerText = originalText;
-            });
+            
+            // Touch gesture handling
+            document.addEventListener('touchstart', e => {
+                touchStartX = e.touches[0].clientX;
+                touchStartY = e.touches[0].clientY;
+            }, { passive: true });
+            
+            document.addEventListener('touchend', e => {
+                const touchEndX = e.changedTouches[0].clientX;
+                const touchEndY = e.changedTouches[0].clientY;
+                
+                const deltaX = touchEndX - touchStartX;
+                const deltaY = touchEndY - touchStartY;
+                
+                if (Math.abs(deltaX) > Math.abs(deltaY)) {
+                    const minSwipeDistance = 50;
+                    
+                    if (Math.abs(deltaX) >= minSwipeDistance) {
+                        isTranslated = !isTranslated;
+                        
+                        translatableElements.forEach(element => {
+                            const originalText = element.getAttribute('data-original') || element.innerText;
+                            const chineseText = element.getAttribute('data-cn');
+                            
+                            if (!element.getAttribute('data-original')) {
+                                element.setAttribute('data-original', originalText);
+                            }
+                            
+                            element.style.opacity = '0';
+                            
+                            setTimeout(() => {
+                                element.innerText = isTranslated ? chineseText : originalText;
+                                element.style.opacity = '1';
+                            }, 150);
+                        });
+                        
+                        // Visual feedback
+                        const feedback = document.createElement('div');
+                        feedback.style.cssText = `
+                            position: fixed;
+                            top: 50%;
+                            left: 50%;
+                            transform: translate(-50%, -50%);
+                            background: rgba(0, 0, 0, 0.7);
+                            color: white;
+                            padding: 10px 20px;
+                            border-radius: 20px;
+                            pointer-events: none;
+                            opacity: 0;
+                            transition: opacity 0.3s ease;
+                            z-index: 1000;
+                        `;
+                        feedback.innerText = isTranslated ? '中文' : 'English';
+                        document.body.appendChild(feedback);
+                        
+                        setTimeout(() => feedback.style.opacity = '1', 0);
+                        setTimeout(() => {
+                            feedback.style.opacity = '0';
+                            setTimeout(() => feedback.remove(), 300);
+                        }, 1000);
+                    }
+                }
+            }, { passive: true });
+            
+            // First-time user hint
+            if (!localStorage.getItem('swipeHintShown')) {
+                setTimeout(() => {
+                    const hint = document.createElement('div');
+                    hint.style.cssText = `
+                        position: fixed;
+                        bottom: 20px;
+                        left: 50%;
+                        transform: translateX(-50%);
+                        background: rgba(0, 0, 0, 0.8);
+                        color: white;
+                        padding: 10px 20px;
+                        border-radius: 10px;
+                        font-size: 14px;
+                        pointer-events: none;
+                        animation: fadeInOut 5s forwards;
+                        z-index: 1000;
+                    `;
+                    hint.innerText = 'Swipe left/right to translate';
+                    document.body.appendChild(hint);
+                    
+                    const style = document.createElement('style');
+                    style.textContent = `
+                        @keyframes fadeInOut {
+                            0% { opacity: 0; }
+                            10% { opacity: 1; }
+                            90% { opacity: 1; }
+                            100% { opacity: 0; }
+                        }
+                    `;
+                    document.head.appendChild(style);
+                    
+                    setTimeout(() => hint.remove(), 5000);
+                    localStorage.setItem('swipeHintShown', 'true');
+                }, 2000);
+            }
         });
     </script>
 </body>
-
 <footer>
     <!-- Footer content can go here -->
 </footer>
-
+</html>
+<footer>
+    <!-- Footer content can go here -->
+</footer>
 </html>
