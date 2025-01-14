@@ -97,6 +97,38 @@
                 if (!isTranslated) element.innerText = originalText;
             });
         });
+
+        // Random Translation Feature
+        const translateElements = document.querySelectorAll('.translate');
+        const toggleRandomTranslation = () => {
+            if (translateElements.length === 0) return;
+
+            // Choose a random element
+            const randomIndex = Math.floor(Math.random() * translateElements.length);
+            const element = translateElements[randomIndex];
+
+            // Get current and alternate text
+            const originalText = element.innerText;
+            const chineseText = element.getAttribute('data-cn');
+            const isTranslated = element.getAttribute('data-translated') === 'true';
+
+            // Toggle translation
+            element.innerText = isTranslated ? originalText : chineseText;
+            element.setAttribute('data-translated', !isTranslated);
+        };
+
+        // Debounce function to limit event firing frequency
+        const debounce = (func, delay) => {
+            let timeout;
+            return (...args) => {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func(...args), delay);
+            };
+        };
+
+        // Attach events for scrolling and touch
+        document.addEventListener('scroll', debounce(toggleRandomTranslation, 300));
+        document.addEventListener('touchstart', toggleRandomTranslation);
     </script>
 </body>
 <footer>
