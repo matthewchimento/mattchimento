@@ -5,40 +5,53 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Matt Chimento</title>
+
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="images/resized_bear_600x220.png" />
+
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet" />
+
     <style>
+        /* General page styles */
         html {
             scroll-behavior: smooth;
         }
+
         body {
             font-family: 'Merriweather', serif;
             text-align: center;
             margin: 20px;
         }
+
         .translate {
             display: inline-block;
             cursor: pointer;
-            transition: color 1s ease; text-shadow 1s ease-in-out;
+            transition: color 1.5s ease, text-shadow 1.5s ease-in-out;
         }
+
         .column {
             max-width: 600px;
             margin: 0 auto;
             padding: 10px;
         }
+
         img {
             max-width: 100%;
             height: auto;
+            cursor: pointer;
         }
+
         p, h1, h2 {
             word-wrap: break-word;
         }
+
         a {
             display: inline-block;
             margin: 5px 0;
+            padding: 10px 5px; /* Increase tap area for links */
         }
+
         .contact-button {
             display: inline-block;
             margin-top: 20px;
@@ -49,89 +62,142 @@
             border-radius: 5px;
             font-size: 16px;
         }
+
         .contact-button:hover {
             background-color: #0056b3;
         }
+
+        #hint {
+            color: gray;
+            font-size: 14px;
+            margin-top: 10px;
+            transition: opacity 0.5s ease;
+        }
     </style>
 </head>
+
 <body>
+    <!-- Main content container -->
     <div class="column">
-        <img src="images/resized_bear_600x220.png" alt="Reality." loading="lazy" />
+        <!-- Bear image with onclick functionality -->
+        <img 
+            src="images/resized_bear_600x220.png" 
+            alt="Reality." 
+            loading="lazy" 
+            onclick="stopCycleAndSetLanguage()"
+        />
+
+        <!-- Hint message for first-time users -->
+        <p id="hint">click bear for help</p>
+
+        <!-- Introduction header -->
         <h1>
-            <span class="translate" data-cn="你好，我是马特">Hi, I'm Matt</span>
+            <span class="translate" data-en="Hi, I'm Matt" data-cn="你好，我是马特">Hi, I'm Matt</span>
         </h1>
+
+        <!-- Subtitle description -->
         <p>
-            <span class="translate" data-cn="軟體工程師。機器學習。網路安全。">Software Engineer. Machine Learning. CyberSec.</span>
+            <span class="translate" data-en="Software Engineer. Machine Learning. CyberSec." data-cn="軟體工程師。機器學習。網路安全。">Software Engineer. Machine Learning. CyberSec.</span>
         </p>
+
+        <!-- Open source section -->
         <h2>
-            <span class="translate" data-cn="开源">Open Source:</span>
+            <span class="translate" data-en="Open Source:" data-cn="开源">Open Source:</span>
         </h2>
         <ul>
-            <!-- Content under "Open Source" has been removed -->
+            <!-- Placeholder for open source content -->
         </ul>
+
+        <!-- Social links section -->
         <h2>
-            <span class="translate" data-cn="社交">Socials:</span>
+            <span class="translate" data-en="Socials:" data-cn="社交">Socials:</span>
         </h2>
         <p>
-            <a href="https://github.com/matthewchimento" target="_blank" class="translate" data-cn="码云">GitHub</a>&nbsp;|&nbsp;
-            <a href="https://twitter.com/inframatt" target="_blank" class="translate" data-cn="推特">Twitter</a>&nbsp;|&nbsp;
-            <a href="https://instagram.com/matt_chimento" target="_blank" class="translate" data-cn="英斯達">Insta</a>
+            <a href="https://github.com/matthewchimento" target="_blank" class="translate" data-en="GitHub" data-cn="码云">GitHub</a>&nbsp;|&nbsp;
+            <a href="https://twitter.com/inframatt" target="_blank" class="translate" data-en="Twitter" data-cn="推特">Twitter</a>&nbsp;|&nbsp;
+            <a href="https://instagram.com/matt_chimento" target="_blank" class="translate" data-en="Insta" data-cn="英斯達">Insta</a>
         </p>
     </div>
+
     <script defer>
-        // Translation Toggle Script
-        document.querySelectorAll('.translate').forEach(element => {
-            const originalText = element.innerText;
+        // Collect all elements with the "translate" class
+        const translateElements = Array.from(document.querySelectorAll('.translate'));
+
+        // Include footer in the translation cycle
+        const footerTranslate = document.querySelector('footer .translate');
+        if (footerTranslate) translateElements.push(footerTranslate);
+
+        // Store interval IDs for the translation cycle
+        let intervalIds = [];
+
+        // Function to toggle text between English and Chinese
+        const toggleTranslation = (element) => {
+            const englishText = element.getAttribute('data-en');
             const chineseText = element.getAttribute('data-cn');
-            let isTranslated = false;
-            const toggleTranslation = () => {
-                element.innerText = isTranslated ? originalText : chineseText;
-                isTranslated = !isTranslated;
-            };
-            // Handle hover for desktop and tap for mobile
-            element.addEventListener('click', toggleTranslation);
-            element.addEventListener('mouseenter', () => {
-                if (!isTranslated) element.innerText = chineseText;
-            });
-            element.addEventListener('mouseleave', () => {
-                if (!isTranslated) element.innerText = originalText;
-            });
-        });
-
-        // Random Translation Feature
-        const translateElements = document.querySelectorAll('.translate');
-        const toggleRandomTranslation = () => {
-            if (translateElements.length === 0) return;
-
-            // Choose a random element
-            const randomIndex = Math.floor(Math.random() * translateElements.length);
-            const element = translateElements[randomIndex];
-
-            // Get current and alternate text
-            const originalText = element.innerText;
-            const chineseText = element.getAttribute('data-cn');
-            const isTranslated = element.getAttribute('data-translated') === 'true';
-
-            // Toggle translation
-            element.innerText = isTranslated ? originalText : chineseText;
-            element.setAttribute('data-translated', !isTranslated);
+            element.innerText = element.innerText === englishText ? chineseText : englishText;
         };
 
-        // Debounce function to limit event firing frequency
-        const debounce = (func, delay) => {
-            let timeout;
-            return (...args) => {
-                clearTimeout(timeout);
-                timeout = setTimeout(() => func(...args), delay);
-            };
+        // Start random translation cycle
+        const startCycle = () => {
+            translateElements.forEach((element) => {
+                const randomSpeed = Math.random() * 4000 + 3000; // Random speed between 3s and 7s
+                const id = setInterval(() => {
+                    toggleTranslation(element);
+                }, randomSpeed);
+                intervalIds.push(id);
+            });
         };
 
-        // Attach events for scrolling and touch
-        document.addEventListener('scroll', debounce(toggleRandomTranslation, 300));
-        document.addEventListener('touchstart', toggleRandomTranslation);
+        // Stop all translation cycles
+        const stopCycle = () => {
+            intervalIds.forEach((id) => clearInterval(id));
+            intervalIds = [];
+        };
+
+        // Stop cycle and set all text to one language
+        const stopCycleAndSetLanguage = () => {
+            stopCycle();
+
+            // Set all text to one language
+            const isEnglish = translateElements[0].innerText === translateElements[0].getAttribute('data-en');
+            translateElements.forEach((element) => {
+                element.innerText = isEnglish 
+                    ? element.getAttribute('data-cn') 
+                    : element.getAttribute('data-en');
+            });
+        };
+
+        // Add hover effect to temporarily toggle text
+        const addHoverEffect = () => {
+            translateElements.forEach((element) => {
+                element.addEventListener('mouseenter', () => {
+                    toggleTranslation(element);
+                });
+                element.addEventListener('mouseleave', () => {
+                    toggleTranslation(element);
+                });
+            });
+        };
+
+        // Initialize on page load
+        window.onload = () => {
+            startCycle();
+            addHoverEffect();
+
+            // Fade out hint after 0.5 seconds
+            const hint = document.getElementById('hint');
+            setTimeout(() => {
+                if (hint) {
+                    hint.style.opacity = '0';
+                    setTimeout(() => hint.remove(), 500); // Remove hint element after fade-out
+                }
+            }, 500);
+        };
     </script>
 </body>
+
 <footer>
-    <!-- Footer content can go here -->
+
 </footer>
+
 </html>
