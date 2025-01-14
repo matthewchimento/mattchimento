@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="images/resized_bear_600x220.png" />
+    <title>Hi, Matt</title>
+    <style>
+        body {
+            font-family: 'Merriweather', serif;
+            text-align: center;
+            margin: 20px;
+        }
+
+        .translate {
+            display: inline-block;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        footer {
+            margin-top: 20px;
+            color: black;
+            font-size: 14px;
+        }
+    </style>
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XGMYDB8Z40"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+        gtag('config', 'G-XGMYDB8Z40');
+    </script>
+</head>
+
+<body>
+    <div class="column">
+        <img src="images/resized_bear_600x220.png" alt="Reality." />
+        <h1>
+            <span class="translate" data-cn="你好，我是马特">Hi, I'm Matt</span>
+        </h1>
+        <p>
+            <span class="translate" data-cn="我喜欢人工智能和网络安全">I like artificial intelligence and cybersecurity.</span>
+        </p>
+        <h2>
+            <span class="translate" data-cn="开源">Open Source:</span>
+        </h2>
+        <ul>
+            <!-- Content under "Open Source" has been removed -->
+        </ul>
+        <h2>
+            <span class="translate" data-cn="社交">Socials:</span>
+        </h2>
+        <p>
+            <a href="https://github.com/matthewchimento" target="_blank" class="translate" data-cn="码云">GitHub</a>&nbsp;|&nbsp;
+            <a href="https://twitter.com/inframatt" target="_blank" class="translate" data-cn="推特">Twitter</a>&nbsp;|&nbsp;
+            <a href="https://instagram.com/matt_chimento" target="_blank" class="translate" data-cn="英斯達">Insta</a>
+        </p>
+    </div>
+
+    <footer>
+        <p id="visitor-count">Visitors: Loading...</p>
+    </footer>
+
+    <script>
+        // Public Counter using Google Analytics API
+        async function fetchVisitorCount() {
+            try {
+                const response = await fetch('https://your-backend-url.com/visitor-count'); // Replace with your backend URL
+                const data = await response.json();
+                document.getElementById('visitor-count').innerText = `Visitors: ${data.visitors}`;
+            } catch (error) {
+                console.error('Error fetching visitor count:', error);
+                document.getElementById('visitor-count').innerText = 'Visitors: Unable to load';
+            }
+        }
+
+        fetchVisitorCount();
+
+        // Translation Toggle Script
+        document.querySelectorAll('.translate').forEach(element => {
+            const originalText = element.innerText;
+            const chineseText = element.getAttribute('data-cn');
+
+            let isTranslated = false;
+
+            const toggleTranslation = () => {
+                if (isTranslated) {
+                    element.innerText = originalText;
+                } else {
+                    element.innerText = chineseText;
+                }
+                isTranslated = !isTranslated;
+            };
+
+            // Handle hover for desktop and tap for mobile
+            element.addEventListener('click', toggleTranslation); // Mobile: Tap to toggle
+            element.addEventListener('mouseenter', () => {
+                if (!isTranslated) element.innerText = chineseText;
+            });
+            element.addEventListener('mouseleave', () => {
+                if (!isTranslated) element.innerText = originalText;
+            });
+        });
+    </script>
+</body>
+
+</html>
