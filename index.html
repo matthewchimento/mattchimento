@@ -22,6 +22,9 @@
             font-family: 'Merriweather', serif;
             text-align: center;
             margin: 20px;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
 
         .translate {
@@ -34,6 +37,7 @@
             max-width: 600px;
             margin: 0 auto;
             padding: 10px;
+            flex: 1;
         }
 
         img {
@@ -72,6 +76,12 @@
             font-size: 14px;
             margin-top: 10px;
             transition: opacity 0.5s ease;
+        }
+
+        footer {
+            text-align: center;
+            background-color: #f8f9fa;
+            padding: 10px 0;
         }
     </style>
 </head>
@@ -191,10 +201,15 @@
             }, 500);
         };
     </script>
+
+    <footer>
+        <p>
+            <span class="translate" data-en="4 business inquiries:" data-cn="业务咨询：">business inquiries:</span>
+            <a href="mailto:your-email@example.com" class="translate" data-en="Email me" data-cn="电邮联系">
+                <i class="fas fa-envelope"></i> 
+            </a>
+        </p>
+    </footer>
 </body>
-
-<footer>
-
-</footer>
 
 </html>
