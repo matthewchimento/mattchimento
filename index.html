@@ -28,7 +28,11 @@
         .translate {
             display: inline-block;
             cursor: pointer;
-            transition: color 1.5s ease, text-shadow 1.5s ease-in-out;
+            transition: color 1.5s ease, text-shadow 1.5s ease-in-out, opacity 0.35s ease;
+        }
+
+        .translate.fade-out {
+            opacity: 0;
         }
 
         .column {
@@ -132,43 +136,61 @@
         const footerTranslate = document.querySelector('footer .translate');
         if (footerTranslate) translateElements.push(footerTranslate);
 
-        // Store interval IDs for the translation cycle
+        // Store interval/timeout IDs for the translation cycle
         let intervalIds = [];
+        let timeoutIds = [];
 
-        // Function to toggle text between English and Chinese
+        // How long the fade-out takes before the text is swapped (must match CSS opacity transition)
+        const FADE_MS = 350;
+
+        // Function to toggle text between English and Chinese with a smooth cross-fade
         const toggleTranslation = (element) => {
             const englishText = element.getAttribute('data-en');
             const chineseText = element.getAttribute('data-cn');
-            element.innerText = element.innerText === englishText ? chineseText : englishText;
+            element.classList.add('fade-out');
+            const id = setTimeout(() => {
+                element.innerText = element.innerText === englishText ? chineseText : englishText;
+                element.classList.remove('fade-out');
+            }, FADE_MS);
+            timeoutIds.push(id);
         };
 
-        // Start random translation cycle
+        // Start random translation cycle, kicking off almost immediately for each element
         const startCycle = () => {
             translateElements.forEach((element) => {
-                const randomSpeed = Math.random() * 4000 + 3000; // Random speed between 3s and 7s
-                const id = setInterval(() => {
+                const randomSpeed = Math.random() * 4000 + 3000; // Random interval between 3s and 7s
+                const initialDelay = Math.random() * 800; // Start almost right away, lightly staggered
+                const startId = setTimeout(() => {
                     toggleTranslation(element);
-                }, randomSpeed);
-                intervalIds.push(id);
+                    const id = setInterval(() => toggleTranslation(element), randomSpeed);
+                    intervalIds.push(id);
+                }, initialDelay);
+                timeoutIds.push(startId);
             });
         };
 
         // Stop all translation cycles
         const stopCycle = () => {
             intervalIds.forEach((id) => clearInterval(id));
+            timeoutIds.forEach((id) => clearTimeout(id));
             intervalIds = [];
+            timeoutIds = [];
         };
 
-        // Stop cycle and set all text to one language
+        // Stop cycle and set all text to one language, with the same smooth cross-fade
         const stopCycleAndSetLanguage = () => {
             stopCycle();
 
             // Set all text to one language
             const isEnglish = translateElements[0].innerText === translateElements[0].getAttribute('data-en');
             translateElements.forEach((element) => {
-                element.innerText = isEnglish 
-                    ? element.getAttribute('data-cn') 
-                    : element.getAttribute('data-en');
+                element.classList.add('fade-out');
+                setTimeout(() => {
+                    element.innerText = isEnglish
+                        ? element.getAttribute('data-cn')
+                        : element.getAttribute('data-en');
+                    element.classList.remove('fade-out');
+                }, FADE_MS);
             });
         };
 
@@ -184,8 +206,8 @@
             });
         };
 
-        // Initialize on page load
-        window.onload = () => {
+        // Initialize as soon as the DOM is ready, instead of waiting for images to finish loading
+        document.addEventListener('DOMContentLoaded', () => {
             startCycle();
             addHoverEffect();
 
@@ -197,7 +219,7 @@
                     setTimeout(() => hint.remove(), 500); // Remove hint element after fade-out
                 }
             }, 500);
-        };
+        });
     </script>
 
     <footer>
