@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Matt &amp; Mar — Written in the Stars</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>✨</text></svg>" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-deep: #0a0c1f;
+    --bg-mid: #12153a;
+    --bg-soft: #191d4a;
+    --gold: #e3c17e;
+    --gold-dim: #b89a5e;
+    --text: #f2efe7;
+    --muted: #a7a4c4;
+    --line: rgba(227, 193, 126, 0.35);
+  }
+
+  * { box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    margin: 0;
+    background: radial-gradient(ellipse at 20% 0%, var(--bg-soft) 0%, var(--bg-deep) 55%),
+                radial-gradient(ellipse at 80% 40%, var(--bg-mid) 0%, transparent 60%),
+                var(--bg-deep);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+
+  h1, h2, h3, .serif {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+  }
+
+  #stars {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .star {
+    position: absolute;
+    background: #fff;
+    border-radius: 50%;
+    animation: twinkle 4s ease-in-out infinite;
+  }
+
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.15; }
+    50% { opacity: 1; }
+  }
+
+  main {
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 40px 20px;
+  }
+
+  .hero .kicker {
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    font-size: 0.7rem;
+    color: var(--gold);
+    margin-bottom: 22px;
+  }
+
+  .hero h1 {
+    font-size: clamp(2.8rem, 8vw, 5.5rem);
+    margin: 0;
+    line-height: 1.05;
+    background: linear-gradient(120deg, #fff, var(--gold) 60%, #fff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .hero p.sub {
+    margin-top: 22px;
+    max-width: 480px;
+    color: var(--muted);
+    font-size: 1.05rem;
+    font-style: italic;
+    font-family: 'Cormorant Garamond', serif;
+  }
+
+  .scroll-cue {
+    margin-top: 60px;
+    color: var(--gold-dim);
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    animation: bob 2.2s ease-in-out infinite;
+  }
+
+  @keyframes bob {
+    0%, 100% { transform: translateY(0); opacity: 0.6; }
+    50% { transform: translateY(8px); opacity: 1; }
+  }
+
+  .timeline {
+    position: relative;
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 40px 20px 120px;
+  }
+
+  .track {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    transform: translateX(-50%);
+    background: rgba(255,255,255,0.06);
+  }
+
+  .track-fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 0;
+    background: linear-gradient(to bottom, var(--gold), var(--gold-dim));
+    box-shadow: 0 0 12px var(--gold);
+    transition: height 0.15s ease-out;
+  }
+
+  .entry {
+    position: relative;
+    width: 100%;
+    display: flex;
+    margin-bottom: 90px;
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+
+  .entry.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .entry[data-side="left"] { justify-content: flex-start; }
+  .entry[data-side="right"] { justify-content: flex-end; }
+
+  .node {
+    position: absolute;
+    left: 50%;
+    top: 6px;
+    transform: translateX(-50%);
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background: var(--bg-deep);
+    border: 1px solid var(--line);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    color: var(--gold);
+    z-index: 2;
+    box-shadow: 0 0 0 4px rgba(10,12,31,1), 0 0 18px rgba(227,193,126,0.25);
+  }
+
+  .card {
+    width: calc(50% - 60px);
+    background: linear-gradient(160deg, rgba(255,255,255,0.045), rgba(255,255,255,0.01));
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 14px;
+    padding: 26px 28px;
+    backdrop-filter: blur(6px);
+  }
+
+  .entry-date {
+    display: block;
+    font-size: 0.72rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+    margin-bottom: 8px;
+  }
+
+  .card h3 {
+    margin: 0 0 12px;
+    font-size: 1.6rem;
+    color: var(--text);
+  }
+
+  .card p.teaser {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.95rem;
+    line-height: 1.55;
+  }
+
+  .expand-btn {
+    background: none;
+    border: none;
+    color: var(--gold);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.78rem;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    padding: 14px 0 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .expand-btn .arrow {
+    transition: transform 0.3s ease;
+    display: inline-block;
+  }
+
+  .card.open .expand-btn .arrow {
+    transform: rotate(180deg);
+  }
+
+  .details {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s ease, margin-top 0.5s ease;
+    margin-top: 0;
+  }
+
+  .card.open .details {
+    max-height: 400px;
+    margin-top: 14px;
+  }
+
+  .details p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.9rem;
+    line-height: 1.65;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    padding-top: 14px;
+  }
+
+  .epilogue {
+    max-width: 640px;
+    margin: 0 auto;
+    text-align: center;
+    padding: 60px 24px 140px;
+  }
+
+  .epilogue h2 {
+    font-size: clamp(1.8rem, 5vw, 2.6rem);
+    color: var(--gold);
+    margin-bottom: 20px;
+  }
+
+  .epilogue p {
+    color: var(--muted);
+    line-height: 1.8;
+    font-size: 1.05rem;
+  }
+
+  .epilogue .sign {
+    margin-top: 30px;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    color: var(--text);
+    font-size: 1.2rem;
+  }
+
+  @media (max-width: 760px) {
+    .track { left: 24px; }
+    .node { left: 24px; width: 38px; height: 38px; font-size: 1.05rem; }
+    .entry, .entry[data-side="left"], .entry[data-side="right"] {
+      justify-content: flex-start;
+      padding-left: 60px;
+    }
+    .card { width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<div id="stars"></div>
+
+<main>
+  <section class="hero">
+    <div class="kicker">a timeline, written in the sky</div>
+    <h1>Matt &amp; Mar</h1>
+    <p class="sub">Every date below is real. So is what the sky was doing at the time.</p>
+    <div class="scroll-cue">scroll ↓</div>
+  </section>
+
+  <section class="timeline">
+    <div class="track"><div class="track-fill" id="trackFill"></div></div>
+
+    <!-- 1 -->
+    <div class="entry" data-side="left">
+      <div class="node">♆</div>
+      <div class="card">
+        <span class="entry-date">February 5, 2026</span>
+        <h3>Where It Started</h3>
+        <p class="teaser">Ten days before we met, Neptune slipped into Aries — the first time since the 1860s. A 165-year chapter in dreamy Pisces closed, and a bold new one opened.</p>
+        <button class="expand-btn"><span class="arrow">▾</span> the stars, in detail</button>
+        <div class="details">
+          <p>Neptune is the planet of dreams, imagination, and the things we're drawn to before we can explain why. It spends about 14 years in each sign, so a Neptune sign-change is rare — the last time it entered Aries, the U.S. Civil War hadn't happened yet. On January 26, 2026, it crossed into Aries for good: a sign about courage, first moves, and starting things without waiting for permission. Ten days later, on February 5th, I met you.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2 -->
+    <div class="entry" data-side="right">
+      <div class="node">♄</div>
+      <div class="card">
+        <span class="entry-date">February 14, 2026</span>
+        <h3>Valentine's Day — Our Anniversary</h3>
+        <p class="teaser">The day before, Saturn completed its move into Aries — the planet of commitment and long-term structure, landing in the sign of courage and new beginnings.</p>
+        <button class="expand-btn"><span class="arrow">▾</span> the stars, in detail</button>
+        <div class="details">
+          <p>Saturn doesn't rush. It spends about two and a half years in a sign, and wherever it lands, it asks the same question: are you willing to build something real here? On February 13, 2026, it finished its move into Aries — done drifting back and forth since 2025, settled in for good until 2028. One day later, we made it official. Three days after that, an eclipse in Aquarius opened 2026's first new-beginnings portal — but ours had already opened.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3 -->
+    <div class="entry" data-side="left">
+      <div class="node">♍</div>
+      <div class="card">
+        <span class="entry-date">March 14, 2026</span>
+        <h3>One Month</h3>
+        <p class="teaser">Eleven days earlier, a total lunar eclipse swept through Virgo — the sign of devotion and getting the details right.</p>
+        <button class="expand-btn"><span class="arrow">▾</span> the stars, in detail</button>
+        <div class="details">
+          <p>Lunar eclipses are full moons with the volume turned up: whatever's real gets illuminated, whatever isn't tends to fall away. This one landed in Virgo on March 3rd — practical, detail-oriented, quietly loyal. One month in, that's exactly the shape this was taking: less grand gesture, more paying attention.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4 -->
+    <div class="entry" data-side="right">
+      <div class="node">♄</div>
+      <div class="card">
+        <span class="entry-date">April 14, 2026</span>
+        <h3>Two Months</h3>
+        <p class="teaser">Saturn, two months into building in Aries, was doing the unglamorous work — laying the first courses of brick before anything looks like a structure.</p>
+        <button class="expand-btn"><span class="arrow">▾</span> the stars, in detail</button>
+        <div class="details">
+          <p>This far into a Saturn transit, nothing dramatic has usually happened yet — it's just steady, repeated effort, showing up. Meanwhile Uranus, in its first year moving through quick-witted, curious Gemini, kept things from ever going flat. Structure and spontaneity, at the same time. Fitting, for two months in.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5 -->
+    <div class="entry" data-side="left">
+      <div class="node">♄</div>
+      <div class="card">
+        <span class="entry-date">May 14, 2026</span>
+        <h3>Three Months</h3>
+        <p class="teaser">Three months into Aries, Saturn's foundation had started to hold weight.</p>
+        <button class="expand-btn"><span class="arrow">▾</span> the stars, in detail</button>
+        <div class="details">
+          <p>You don't usually notice Saturn's work until you're already standing on it. Three months in, the early architecture of something long-term was quietly, almost invisibly, becoming load-bearing.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6 -->
+    <div class="entry" data-side="right">
+      <div class="node">♃</div>
+      <div class="card">
+        <span class="entry-date">June 14, 2026</span>
+        <h3>Four Months</h3>
+        <p class="teaser">Jupiter was in its final two weeks moving through Cancer, closing out a year spent expanding everything to do with home and emotional safety — right before its leap into Leo.</p>
+        <button class="expand-btn"><span class="arrow">▾</span> the stars, in detail</button>
+        <div class="details">
+          <p>Jupiter spends about a year in each sign, magnifying whatever it touches. Its year-plus run through Cancer was about home, security, the people you let all the way in. Two weeks after this date, it would cross into Leo. Four months in, feeling more and more like home was exactly on schedule.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7 -->
+    <div class="entry" data-side="left">
+      <div class="node">♃</div>
+      <div class="card">
+        <span class="entry-date">July 14, 2026</span>
+        <h3>Five Months</h3>
+        <p class="teaser">Two weeks earlier, Jupiter crossed into Leo — the sign of romance, warmth, and loving out loud on purpose.</p>
+        <button class="expand-btn"><span class="arrow">▾</span> the stars, in detail</button>
+        <div class="details">
+          <p>Jupiter expands whatever it touches, and Leo doesn't do subtle. On June 30th, Jupiter left the quiet inwardness of Cancer for Leo's bright, generous, all-in warmth. Five months in, that's a fair description of where this had gotten to.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 8 -->
+    <div class="entry" data-side="right">
+      <div class="node">♌</div>
+      <div class="card">
+        <span class="entry-date">August 14, 2026</span>
+        <h3>Six Months</h3>
+        <p class="teaser">Two days earlier, a total solar eclipse landed in Leo — while Jupiter was still early in its own Leo season. Two big, expansive, optimistic forces, both leaning toward more warmth, more boldness.</p>
+        <button class="expand-btn"><span class="arrow">▾</span> the stars, in detail</button>
+        <div class="details">
+          <p>Solar eclipses are new moons at maximum strength — high-voltage beginnings. This one hit Leo on August 12th, doubled up with Jupiter still settling into the same sign. Half a year in, the sky went all in too.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 9 -->
+    <div class="entry" data-side="left">
+      <div class="node">♍</div>
+      <div class="card">
+        <span class="entry-date">September 14, 2026</span>
+        <h3>Seven Months</h3>
+        <p class="teaser">No major shift landed on this exact day — Saturn was still steadily building in Aries, Jupiter still glowing in Leo. The Sun had just moved into precise, devoted Virgo season.</p>
+        <button class="expand-btn"><span class="arrow">▾</span> the stars, in detail</button>
+        <div class="details">
+          <p>Sometimes the most romantic astrology is the least dramatic kind — just steady. Nothing broke, nothing shifted suddenly. Virgo season is about noticing the small things on purpose, which, seven months in, felt like the whole point.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 10 -->
+    <div class="entry" data-side="right">
+      <div class="node">♎</div>
+      <div class="card">
+        <span class="entry-date">October 14, 2026</span>
+        <h3>Eight Months</h3>
+        <p class="teaser">Libra season — the one stretch of the zodiac calendar built entirely around "we" instead of "I."</p>
+        <button class="expand-btn"><span class="arrow">▾</span> the stars, in detail</button>
+        <div class="details">
+          <p>Libra is the only sign literally symbolized by a partnership — a set of scales, balance between two. Eight months in, under a sky tilted toward togetherness, that felt about right.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 11 -->
+    <div class="entry" data-side="left">
+      <div class="node">♏</div>
+      <div class="card">
+        <span class="entry-date">November 14, 2026</span>
+        <h3>Nine Months</h3>
+        <p class="teaser">Scorpio season — depth, past the easy early excitement into something more real. Saturn, meanwhile, was closing in on its first full year in Aries.</p>
+        <button class="expand-btn"><span class="arrow">▾</span> the stars, in detail</button>
+        <div class="details">
+          <p>Scorpio season pulls things below the surface. And Saturn entered Aries the same week we became a couple, back in February — so every month we've counted, Saturn's been counting too. Nine months for us. Nine months of Saturn quietly building in Aries.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 12 -->
+    <div class="entry" data-side="right">
+      <div class="node">♐</div>
+      <div class="card">
+        <span class="entry-date">December 14, 2026</span>
+        <h3>Ten Months</h3>
+        <p class="teaser">Sagittarius season — big-picture optimism, wanting more of the world together. And Saturn, ten months into Aries alongside our ten months, had gone from laying bricks to something that actually looks like a structure.</p>
+        <button class="expand-btn"><span class="arrow">▾</span> the stars, in detail</button>
+        <div class="details">
+          <p>Ten months of Saturn in Aries. Ten months of us. Same age, basically. Whatever this is, the sky's been building it right alongside us — and both of us are just getting started.</p>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <section class="epilogue">
+    <h2>The sky keeps moving.</h2>
+    <p>So do we. Every one of these dates is real, and so was everything the sky was doing on each one — I just went and looked it up. Here's to whatever era comes next.</p>
+    <p class="sign">Mar, I love you. — Matt</p>
+  </section>
+</main>
+
+<script>
+  // Starfield
+  (function() {
+    const container = document.getElementById('stars');
+    const count = window.innerWidth < 700 ? 70 : 140;
+    for (let i = 0; i < count; i++) {
+      const s = document.createElement('div');
+      s.className = 'star';
+      const size = Math.random() * 2 + 0.5;
+      s.style.width = size + 'px';
+      s.style.height = size + 'px';
+      s.style.top = Math.random() * 100 + '%';
+      s.style.left = Math.random() * 100 + '%';
+      s.style.animationDelay = (Math.random() * 4) + 's';
+      s.style.animationDuration = (Math.random() * 3 + 3) + 's';
+      container.appendChild(s);
+    }
+  })();
+
+  // Reveal entries on scroll
+  const entries = document.querySelectorAll('.entry');
+  const io = new IntersectionObserver((items) => {
+    items.forEach((item) => {
+      if (item.isIntersecting) {
+        item.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.25 });
+  entries.forEach((el) => io.observe(el));
+
+  // Expand/collapse detail
+  document.querySelectorAll('.expand-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      btn.closest('.card').classList.toggle('open');
+    });
+  });
+
+  // Progress line fill
+  const trackFill = document.getElementById('trackFill');
+  const timelineSection = document.querySelector('.timeline');
+  function updateFill() {
+    const rect = timelineSection.getBoundingClientRect();
+    const viewportH = window.innerHeight;
+    const total = rect.height;
+    const scrolled = Math.min(Math.max(viewportH * 0.5 - rect.top, 0), total);
+    const pct = total > 0 ? scrolled / total : 0;
+    trackFill.style.height = (pct * 100) + '%';
+  }
+  window.addEventListener('scroll', () => requestAnimationFrame(updateFill));
+  window.addEventListener('resize', () => requestAnimationFrame(updateFill));
+  updateFill();
+</script>
+
+</body>
+</html>
