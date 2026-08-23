@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex, nofollow" />
+<title>100 Things I Love About You</title>
+<meta name="description" content="For Martha." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;1,500&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext y='26' font-size='26'%3E%F0%9F%A4%8D%3C/text%3E%3C/svg%3E" />
+
+<style>
+  :root {
+    --cream: #fbf4ee;
+    --cream-2: #f6ebe1;
+    --ink: #3c2a2e;
+    --ink-soft: #6b4f55;
+    --rose: #9c3d54;
+    --rose-deep: #7a2e3a;
+    --blush: #f1d9dc;
+    --gold: #c39a5b;
+    --line: rgba(122, 46, 58, 0.18);
+  }
+
+  * { box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    margin: 0;
+    background: var(--cream);
+    background-image:
+      radial-gradient(circle at 15% 10%, var(--blush) 0%, transparent 45%),
+      radial-gradient(circle at 85% 0%, var(--cream-2) 0%, transparent 40%);
+    background-attachment: fixed;
+    color: var(--ink);
+    font-family: 'Cormorant Garamond', 'Merriweather', serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a { color: var(--rose-deep); }
+
+  /* ---------- Countdown intro ---------- */
+  #intro {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    background: var(--rose-deep);
+    color: var(--cream);
+    transition: opacity 0.9s ease, visibility 0.9s ease;
+  }
+
+  #intro.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  #intro-number {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(4rem, 18vw, 9rem);
+    font-weight: 600;
+    line-height: 1;
+    min-width: 1ch;
+    text-align: center;
+  }
+
+  #intro-caption {
+    margin-top: 1rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    font-family: 'Cormorant Garamond', serif;
+    color: var(--blush);
+    opacity: 0.85;
+  }
+
+  #intro-skip {
+    position: absolute;
+    bottom: 28px;
+    right: 28px;
+    background: none;
+    border: 1px solid rgba(251, 244, 238, 0.4);
+    color: var(--cream);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.85rem;
+    letter-spacing: 0.08em;
+    padding: 8px 16px;
+    border-radius: 999px;
+    cursor: pointer;
+    opacity: 0.75;
+  }
+  #intro-skip:hover { opacity: 1; border-color: var(--cream); }
+
+  /* ---------- Layout ---------- */
+  .wrap {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 0 24px 100px;
+  }
+
+  header.hero {
+    text-align: center;
+    padding: 88px 0 40px;
+  }
+
+  .eyebrow {
+    font-family: 'Cormorant Garamond', serif;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    color: var(--rose);
+    margin: 0 0 18px;
+  }
+
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 600;
+    font-size: clamp(2.3rem, 6vw, 3.4rem);
+    line-height: 1.15;
+    margin: 0 0 22px;
+    color: var(--rose-deep);
+  }
+
+  h1 em {
+    font-style: italic;
+    font-weight: 500;
+  }
+
+  .intro-copy {
+    font-size: 1.25rem;
+    line-height: 1.65;
+    color: var(--ink-soft);
+    max-width: 560px;
+    margin: 0 auto;
+  }
+
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 40px auto 0;
+    max-width: 220px;
+    color: var(--gold);
+  }
+  .divider::before, .divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--line);
+  }
+  .divider svg { width: 16px; height: 16px; }
+
+  /* ---------- The list ---------- */
+  ol.list {
+    list-style: none;
+    margin: 56px 0 0;
+    padding: 0;
+    counter-reset: item;
+  }
+
+  .item {
+    counter-increment: item;
+    display: grid;
+    grid-template-columns: 52px 1fr;
+    gap: 18px;
+    align-items: baseline;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--line);
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .item.visible { opacity: 1; transform: translateY(0); }
+
+  .item:last-child { border-bottom: none; }
+
+  .item::before {
+    content: counter(item);
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-weight: 500;
+    font-size: 1.5rem;
+    color: var(--gold);
+    text-align: right;
+  }
+
+  .item p {
+    margin: 0;
+    font-size: 1.28rem;
+    line-height: 1.55;
+    color: var(--ink);
+  }
+
+  /* ---------- Closing ---------- */
+  footer.closing {
+    text-align: center;
+    margin-top: 90px;
+    padding-top: 50px;
+    border-top: 1px solid var(--line);
+  }
+
+  footer.closing p.note {
+    font-size: 1.3rem;
+    line-height: 1.7;
+    color: var(--ink-soft);
+    max-width: 520px;
+    margin: 0 auto 28px;
+  }
+
+  .signature {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1.6rem;
+    color: var(--rose-deep);
+  }
+
+  .date {
+    margin-top: 10px;
+    font-size: 0.95rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    opacity: 0.7;
+  }
+
+  @media (max-width: 480px) {
+    .item { grid-template-columns: 36px 1fr; gap: 12px; }
+    .item::before { font-size: 1.15rem; }
+    .item p { font-size: 1.12rem; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+  <div id="intro" aria-hidden="true">
+    <div id="intro-number">3</div>
+    <div id="intro-caption">press play</div>
+    <button id="intro-skip" type="button">Skip ›</button>
+  </div>
+
+  <div class="wrap">
+    <header class="hero">
+      <p class="eyebrow">For Martha</p>
+      <h1>100 Things I Love<br><em>About You</em></h1>
+      <p class="intro-copy">
+        I could never actually stop at one hundred — but I had to stop somewhere,
+        so here's a start. Every one of these is true, and there are a thousand more
+        I didn't have room for.
+      </p>
+      <div class="divider">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-7.5-4.6-10.2-9.3C.2 8.6 1.6 5 5 5c2 0 3.6 1.2 4.4 2.9C10.2 6.2 11.8 5 13.8 5c3.4 0 4.8 3.6 3.2 6.7C19.5 16.4 12 21 12 21z"/></svg>
+      </div>
+    </header>
+
+    <ol class="list" id="list">
+      <li class="item"><p>The way you listen to me like nothing else in the world matters more.</p></li>
+      <li class="item"><p>How your love is so big and so present — nothing halfway about it.</p></li>
+      <li class="item"><p>That you check on me even when you'd have every reason to be tired of me.</p></li>
+      <li class="item"><p>The eerie number of ways we're just... the same person.</p></li>
+      <li class="item"><p>How we notice the same things at the same time without saying a word.</p></li>
+      <li class="item"><p>Your mind — genuinely one of the most brilliant I've ever come across.</p></li>
+      <li class="item"><p>That you have a real, thought-out opinion on literally everything.</p></li>
+      <li class="item"><p>How you can talk about a movie, a painting, and a book like you made all three.</p></li>
+      <li class="item"><p>That you always know exactly what to say when I'm falling apart.</p></li>
+      <li class="item"><p>How you make sad days smaller just by being in them.</p></li>
+      <li class="item"><p>That you give gifts like it's your love language, thought out every time.</p></li>
+      <li class="item"><p>Our "3... 2... 1..." before every single movie — never skipped, not once.</p></li>
+      <li class="item"><p>Your accent. Every word sounds like it was made just for me to fall for.</p></li>
+      <li class="item"><p>That everything I do now, I quietly measure against what you'd do.</p></li>
+      <li class="item"><p>You're my blueprint, and I didn't even have to ask you to be.</p></li>
+      <li class="item"><p>How we talk through entire movies and somehow it's my favorite part.</p></li>
+      <li class="item"><p>That you scream every single time you get shot in Fortnite like it's personal.</p></li>
+      <li class="item"><p>How you immediately, without fail, come revive me.</p></li>
+      <li class="item"><p>That you ask me for help and actually trust me to give it.</p></li>
+      <li class="item"><p>How emotionally mature you are — it makes me want to be better too.</p></li>
+      <li class="item"><p>Everything you've survived, and you still choose to be soft.</p></li>
+      <li class="item"><p>Your attitude toward life after everything life has thrown at you.</p></li>
+      <li class="item"><p>Our shared hobby of gossiping about the people who copy us.</p></li>
+      <li class="item"><p>Ice shaken espressos from Starbucks — our drink, our thing.</p></li>
+      <li class="item"><p>That you listen to me even when I'm being insane and stupid.</p></li>
+      <li class="item"><p>That I can hand you my trust and it's actually safe there.</p></li>
+      <li class="item"><p>Your loyalty — it's not even a question with you.</p></li>
+      <li class="item"><p>How patiently you helped me undo my trust issues.</p></li>
+      <li class="item"><p>That you understand me in ways I still don't fully understand myself.</p></li>
+      <li class="item"><p>Your running commentary during movies — genuinely the best part.</p></li>
+      <li class="item"><p>How effortlessly funny you are, on purpose and by accident.</p></li>
+      <li class="item"><p>That you can make me laugh on the worst days.</p></li>
+      <li class="item"><p>Your face. I could just look at it.</p></li>
+      <li class="item"><p>Your bone structure, unfairly perfect.</p></li>
+      <li class="item"><p>Your body, and the confidence you carry it with.</p></li>
+      <li class="item"><p>Your tan skin in the summer.</p></li>
+      <li class="item"><p>Your hair — I love just touching it.</p></li>
+      <li class="item"><p>Your voice when it goes soft, just for me.</p></li>
+      <li class="item"><p>The Spanish you speak to your cats when you think no one's listening.</p></li>
+      <li class="item"><p>How much you love animals, and how far you'll go for one in need.</p></li>
+      <li class="item"><p>That you actually love yourself, and it shows.</p></li>
+      <li class="item"><p>Your confidence — not loud, just certain.</p></li>
+      <li class="item"><p>"Baby baby baby baby" every time you're under attack in Fortnite.</p></li>
+      <li class="item"><p>Your energy, and everything it does to me.</p></li>
+      <li class="item"><p>That you half-believe you're a witch, and I half-believe you too.</p></li>
+      <li class="item"><p>Your astrology obsession — I know more birth charts now than I ever wanted to.</p></li>
+      <li class="item"><p>That you remember everything, even things I forgot I said.</p></li>
+      <li class="item"><p>How possessive you get over me — I'm not even a little upset about it.</p></li>
+      <li class="item"><p>Your jealousy, which somehow just feels like proof.</p></li>
+      <li class="item"><p>That you idealize me on days I can't stand myself.</p></li>
+      <li class="item"><p>How you make me feel like I'm worth it, even insecure and messy.</p></li>
+      <li class="item"><p>Your forgiveness, given more generously than I've earned it.</p></li>
+      <li class="item"><p>How understanding you are when I don't deserve the benefit of the doubt.</p></li>
+      <li class="item"><p>That you feel like home in a way I didn't think people could.</p></li>
+      <li class="item"><p>How you make me feel chosen every single day.</p></li>
+      <li class="item"><p>The way you say my name.</p></li>
+      <li class="item"><p>That you remember the small things I mention once, in passing.</p></li>
+      <li class="item"><p>How you turn ordinary nights into my favorite memories.</p></li>
+      <li class="item"><p>The way you fight for me even when I'm not fighting for myself.</p></li>
+      <li class="item"><p>That being loved by you feels like being understood completely.</p></li>
+      <li class="item"><p>How you make being vulnerable with you feel safe instead of scary.</p></li>
+      <li class="item"><p>That you never make me feel crazy for feeling things deeply.</p></li>
+      <li class="item"><p>Your laugh — the real one, not the polite one.</p></li>
+      <li class="item"><p>How you light up talking about something you actually love.</p></li>
+      <li class="item"><p>That you never run out of things to say to me.</p></li>
+      <li class="item"><p>The way our synchronicities keep piling up, like the universe is in on it.</p></li>
+      <li class="item"><p>How similar we are, down to weirdly specific things.</p></li>
+      <li class="item"><p>That you make me want to be a more thoughtful person.</p></li>
+      <li class="item"><p>How you notice when I'm quiet and know exactly why.</p></li>
+      <li class="item"><p>That you show up for me the way my grandma used to.</p></li>
+      <li class="item"><p>How safe I feel telling you literally anything.</p></li>
+      <li class="item"><p>That you never once made me feel like a burden.</p></li>
+      <li class="item"><p>Your intelligence in an argument — terrifying and impressive.</p></li>
+      <li class="item"><p>That you can hold your own opinion against anyone.</p></li>
+      <li class="item"><p>How you explain art and literature like you're pulling back a curtain.</p></li>
+      <li class="item"><p>That movies feel like a ritual with you, not just something to watch.</p></li>
+      <li class="item"><p>How you make our inside jokes feel like their own language.</p></li>
+      <li class="item"><p>That you care for your cats like they're your children.</p></li>
+      <li class="item"><p>Your softness with anything smaller or weaker than you.</p></li>
+      <li class="item"><p>That you notice when something's wrong before I say a word.</p></li>
+      <li class="item"><p>How you handle my bad days without ever making them about you.</p></li>
+      <li class="item"><p>That you still choose me on the days I'm hardest to choose.</p></li>
+      <li class="item"><p>The way you get excited talking about the stars and what they mean.</p></li>
+      <li class="item"><p>That you believe in things bigger than both of us, and let me believe too.</p></li>
+      <li class="item"><p>How you make me feel like the most interesting person in the room.</p></li>
+      <li class="item"><p>That you're endlessly curious about the world, and about me.</p></li>
+      <li class="item"><p>Your taste — in movies, in books, in everything.</p></li>
+      <li class="item"><p>That you never let a compliment just sit there — you always give one back.</p></li>
+      <li class="item"><p>How you make plans just to spend more time with me.</p></li>
+      <li class="item"><p>That you still get excited to see me.</p></li>
+      <li class="item"><p>The way you fall asleep mid-conversation and I don't even mind.</p></li>
+      <li class="item"><p>That you're the last person I want to talk to every single night.</p></li>
+      <li class="item"><p>How our fights never feel like they threaten us.</p></li>
+      <li class="item"><p>That you apologize first, even when you don't have to.</p></li>
+      <li class="item"><p>How you make ordinary Tuesdays feel like something worth remembering.</p></li>
+      <li class="item"><p>That being your person is the best thing I've ever been.</p></li>
+      <li class="item"><p>The life I picture with you in it, without even trying to picture it.</p></li>
+      <li class="item"><p>That you love me on my worst days as much as my best ones.</p></li>
+      <li class="item"><p>How you make me believe I got impossibly lucky.</p></li>
+      <li class="item"><p>That out of everyone, it's you — and I'd choose you again every time.</p></li>
+    </ol>
+
+    <footer class="closing">
+      <p class="note">
+        Martha — this is just a hundred. I ran out of room, not reasons.
+        Thank you for loving me the way you do. I don't think I'll ever
+        get used to how lucky that makes me.
+      </p>
+      <div class="signature">— Matt</div>
+      <div class="date">August 2026</div>
+    </footer>
+  </div>
+
+<script defer>
+(() => {
+  const intro = document.getElementById('intro');
+  const introNumber = document.getElementById('intro-number');
+  const introSkip = document.getElementById('intro-skip');
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const hideIntro = () => {
+    intro.classList.add('hidden');
+    document.body.style.overflow = '';
+  };
+
+  const runCountdown = () => {
+    if (prefersReduced) { hideIntro(); return; }
+    document.body.style.overflow = 'hidden';
+    const steps = ['3', '2', '1', '♥'];
+    let i = 0;
+    introNumber.textContent = steps[i];
+    const tick = () => {
+      i += 1;
+      if (i >= steps.length) {
+        setTimeout(hideIntro, 500);
+        return;
+      }
+      introNumber.textContent = steps[i];
+      setTimeout(tick, 700);
+    };
+    setTimeout(tick, 700);
+  };
+
+  introSkip.addEventListener('click', hideIntro);
+  runCountdown();
+
+  // Scroll reveal for list items
+  const items = document.querySelectorAll('.item');
+  if ('IntersectionObserver' in window && !prefersReduced) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+    items.forEach((item) => observer.observe(item));
+  } else {
+    items.forEach((item) => item.classList.add('visible'));
+  }
+})();
+</script>
+</body>
+</html>
